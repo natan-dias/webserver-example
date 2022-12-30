@@ -37,13 +37,5 @@ pipeline {
             }
         }
     }
-
-
-    stage('Copy SRC') {
-        steps {
-            sh "kubectl exec -n nginx deployment/nginx -- bash -c cd /usr/share/nginx/html/ && git clone https://github.com/natan-dias/webserver-example.git"
-        }
-    }
-
   }
 }
