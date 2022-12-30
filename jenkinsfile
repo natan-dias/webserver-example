@@ -41,9 +41,14 @@ pipeline {
 
     stage('Copy SRC') {
         steps {
-            sh "kubectl exec -n nginx deployment/nginx -- bash -c 'cd /tmp && git clone https://github.com/natan-dias/webserver-example.git"
-            sh "kubectl exec -n nginx deployment/nginx -- bash -c 'mv /tmp/webserver-example/src/* /usr/share/nginx/html && rm -rf /tmp/*'"
+            script{
+            sh (label: 'kubectl', script: ''' 
+            kubectl exec -n nginx deployment/nginx -- bash -c "cd /tmp && git clone https://github.com/natan-dias/webserver-example.git"
+            kubectl exec -n nginx deployment/nginx -- bash -c "mv /tmp/webserver-example/src/* /usr/share/nginx/html && rm -rf /tmp/*"
+            ''')
+            }
         }
+
     }
 
   }
