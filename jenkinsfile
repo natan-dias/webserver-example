@@ -12,7 +12,7 @@ pipeline {
     }
 
     stage('Apply Namespace') {
-        stpes {
+        steps {
             dir ("$JENKINS_HOME/infra/k8s-manifests"){
                 sh "kubectl apply -f namespace.yml"
             }
