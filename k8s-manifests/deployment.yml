@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: natandias1/nginx-webserver:30122022
         #image: natandias1/jenkins:v1.0
         #image: docker.io/jenkins:2.60.3
         ports:
