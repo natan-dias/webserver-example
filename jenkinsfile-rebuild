@@ -36,12 +36,15 @@ pipeline {
     }
 
     stage('Git Push') {
-        steps {
+        environment { 
+                GIT_AUTH = credentials('github-publisher') 
+            }
+        steps {            
             dir ("$JENKINS_HOME/infra"){
                 sh "git config --global user.email 'natan.dias1@live.com'"
                 sh "git config --global user.name 'natan-dias'"
                 sh "git commit -am 'Publish new site version'"
-                sh "git push origin/main HEAD:main"
+                sh "git push origin HEAD:main"
             }
         }
     }
