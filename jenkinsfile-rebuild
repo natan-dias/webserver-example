@@ -9,7 +9,7 @@ pipeline {
         steps {
             sh "mkdir -p $JENKINS_HOME/infra"
             dir ("$JENKINS_HOME/infra"){
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/natan-dias/webserver-example.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-publisher', url: 'https://github.com/natan-dias/webserver-example.git']]])
             }
         }
     }
@@ -38,11 +38,10 @@ pipeline {
     stage('Git Push') {
         steps {
             dir ("$JENKINS_HOME/infra"){
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-publisher', url: 'https://github.com/natan-dias/webserver-example.git']]])
                 sh "git config --global user.email 'natan.dias1@live.com'"
                 sh "git config --global user.name 'natan-dias'"
                 sh "git commit -am 'Publish new site version'"
-                sh "git push"
+                sh "git push origin main"
             }
         }
     }
