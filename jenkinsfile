@@ -14,10 +14,11 @@ pipeline {
         }
     }
 
-    stage('Apply kustomize') {
+    stage('Create ArgoCD app') {
         steps {
-            dir ("$JENKINS_HOME/infra/kustomize-option/"){
-                sh "kubectl apply -k overlays/dev/"
+            dir ("$JENKINS_HOME/infra/argocd"){
+                //sh "kubectl apply -k overlays/dev/"
+                sh "kubectl apply -f webserver-example-app-kustomize.yml"
             }
         }
     }
