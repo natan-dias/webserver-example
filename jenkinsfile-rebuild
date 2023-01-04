@@ -37,7 +37,7 @@ pipeline {
 
     stage('Git Push') {
         environment { 
-                GIT_AUTH = credentials('github-publisher') 
+                GIT_AUTH = credentialsId('github-publisher') 
             }
         steps {            
             dir ("$JENKINS_HOME/infra"){
