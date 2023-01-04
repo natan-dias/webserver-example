@@ -14,13 +14,33 @@ pipeline {
         }
     }
 
-    stage('Apply kustomize') {
+    stage('Apply Namespace') {
         steps {
-            dir ("$JENKINS_HOME/infra/kustomize-option/"){
-                sh "kubectl apply -k overlays/dev/"
+            dir ("$JENKINS_HOME/infra/k8s-manifests"){
+                sh "kubectl apply -f namespace.yml"
             }
         }
     }
+
+    stage('Create storage') {
+        steps {
+            dir ("$JENKINS_HOME/infra/k8s-manifests"){
+                sh (label: 'storage', script: ''' 
+                kubectl get pvc -n nginx --field-selector=metadata.name=nginx-claim -o jsonpath='{.items[0].spec.volumeName}' \\
+                && echo "Storage already exists. Skipping..." \\
+                || kubectl apply -f storage.yml ''')
+            }
+        }
+    }
+
+    stage('Create Service and Deployment'){
+        steps {
+            dir ("$JENKINS_HOME/infra/k8s-manifests"){
+                sh "kubectl apply -f service.yml && kubectl apply -f deployment.yml"
+            }
+        }
+    }
+
 
     stage('Copy SRC') {
         steps {
@@ -32,6 +52,8 @@ pipeline {
             ''')
             }
         }
+
     }
+
   }
 }

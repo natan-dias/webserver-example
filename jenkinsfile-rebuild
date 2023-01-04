@@ -14,14 +14,6 @@ pipeline {
         }
     }
 
-    stage('Apply kustomize') {
-        steps {
-            dir ("$JENKINS_HOME/infra/kustomize-option/"){
-                sh "kubectl apply -k overlays/dev/"
-            }
-        }
-    }
-
     stage('Copy SRC') {
         steps {
             script{
@@ -32,6 +24,26 @@ pipeline {
             ''')
             }
         }
+
     }
+
+    stage('Change Annotation') {
+        steps {
+            dir ("$JENKINS_HOME/infra/kustomize-option/overlays/dev/"){
+                sh "kustomize edit set annotation dev-web/version:v1.$BUILD_NUMBER"
+            }
+        }
+    }
+
+    stage('Git Push') {
+        steps {
+            dir ("$JENKINS_HOME/infra"){
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-publisher', url: 'https://github.com/natan-dias/webserver-example.git']]])
+                sh "git commit -am 'Publish new site version'"
+                sh "git push"
+            }
+        }
+    }
+
   }
 }
