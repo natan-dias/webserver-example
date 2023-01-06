@@ -14,7 +14,7 @@ pipeline {
         }
     }
 
-    stage('Create ArgoCD app') {
+    stage('Create/Refresh ArgoCD app') {
         steps {
             dir ("$JENKINS_HOME/infra/argocd"){
                 //sh "kubectl apply -k overlays/dev/"
