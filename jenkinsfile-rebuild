@@ -29,9 +29,7 @@ pipeline {
 
     stage('Change Annotation and git push') {
         steps {
-            dir ("$JENKINS_HOME/infra"){
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-publisher', url: 'https://github.com/natan-dias/webserver-example.git']]])
-            }
+            dir ("$JENKINS_HOME/infra/kustomize-option/overlays/dev"){
             sh "cd $JENKINS_HOME/infra/kustomize-option/overlays/dev"
             sh "kustomize edit set annotation dev-web/version:v1.$BUILD_NUMBER"
             sh "git config --global user.email 'natan.dias1@live.com'"
