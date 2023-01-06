@@ -27,15 +27,20 @@ pipeline {
 
     }
 
-    stage('Change Annotation') {
+    stage('Change Annotation and git push') {
         steps {
-            dir ("$JENKINS_HOME/infra/kustomize-option/overlays/dev/"){
-                sh "kustomize edit set annotation dev-web/version:v1.$BUILD_NUMBER"
+            dir ("$JENKINS_HOME/infra"){
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-publisher', url: 'https://github.com/natan-dias/webserver-example.git']]])
             }
+            sh "kustomize edit set annotation dev-web/version:v1.$BUILD_NUMBER"
+            sh "git config --global user.email 'natan.dias1@live.com'"
+            sh "git config --global user.name 'natan-dias'"
+            sh "git commit -am 'Publish new site version'"
+            sh "git push"            
         }
     }
 
-    stage('Git Push') {
+   /* stage('Git Push') {
         environment { 
                 GIT_AUTH = credentialsId('github-publisher') 
             }
@@ -47,7 +52,7 @@ pipeline {
                 sh "git push origin HEAD:main"
             }
         }
-    }
+    }*/
 
   }
 }
