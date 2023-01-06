@@ -4,4 +4,4 @@ resources:
 - ../../base
 - service.yml
 commonAnnotations:
-  dev-web/version: v1.1
+  environment: dev
