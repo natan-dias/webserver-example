@@ -27,9 +27,8 @@ pipeline {
         steps {
             script{
             sh (label: 'kubectl', script: ''' 
-            kubectl exec -n nginx deployment/nginx -- bash -c "rm -rf /usr/share/nginx/html/* && rm -rf /tmp/*"
-            kubectl exec -n nginx deployment/nginx -- bash -c "cd /tmp && git clone https://github.com/natan-dias/webserver-example.git"
-            kubectl exec -n nginx deployment/nginx -- bash -c "mv /tmp/webserver-example/src/* /usr/share/nginx/html && rm -rf /tmp/*"
+            kubectl exec -n nginx deployment/nginx -- bash -c "rm -rf /usr/share/nginx/html/*"
+            kubectl exec -n nginx deployment/nginx -- bash -c "cd /usr/share/nginx/html/ && git clone https://github.com/natan-dias/webserver-example-src.git"
             ''')
             }
         }
